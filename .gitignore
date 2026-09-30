@@ -1,0 +1,19 @@
+# OS-specific artifacts
+.DS_Store
+thumbs.db
+
+# Editor
+.idea
+.vscode
+
+# Per-user IsaacScript settings
+isaacscript.json
+
+# The transpiled Lua output
+mod/main.lua
+
+# Dependency directories
+node_modules/
+
+# pnpm
+.pnpm-store
