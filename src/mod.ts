@@ -1,5 +1,6 @@
 import { initModFeatures, ISCFeature, ModCallbackCustom, upgradeMod } from "isaacscript-common";
 import { CardType, EntityType, ModCallback, PickupVariant } from "isaac-typescript-definitions";
+import { ModCallbackRepentogon } from "isaac-typescript-definitions-repentogon";
 
 const name = "Visible Cards Redux (Repentogon)";
 
@@ -8,13 +9,28 @@ export function main(): void {
   const mod = upgradeMod(modVanilla, [ISCFeature.SAVE_DATA_MANAGER] as const);
   const ModFeatures = [] as const;
 
-  mod.AddCallbackCustom(ModCallbackCustom.POST_PEFFECT_UPDATE_REORDERED, onPostPeffectUpdateOrdered)
-  mod.AddCallback(ModCallback.POST_PICKUP_INIT, onPostPickupInit ,PickupVariant.CARD)
+  mod.AddCallbackCustom(ModCallbackCustom.POST_PICKUP_UPDATE_FILTER, onPostPeffectUpdateOrdered, PickupVariant.CARD);
+  mod.AddCallback(ModCallback.POST_PICKUP_INIT, onPostPickupInit, PickupVariant.CARD);
 
   mod.saveDataManager("Cards", data);
 
   initModFeatures(mod, ModFeatures);
 }
+//
+// function test(card: EntityPickup)
+// {
+//   let animationName = ""
+//   const sprite = card.GetSprite()
+//   const animation = sprite.GetAnimation()
+//   const name = sprite.GetFilename()
+//   if (animation !== animationName) {
+//     animationName = animation;
+//     Isaac.DebugString(animation)
+//     Isaac.DebugString(name)
+//   }
+//
+//   return undefined
+// }
 
 const data = {
   level: {
@@ -28,7 +44,6 @@ const shouldReplaceCard = new Set([
   58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76,
   79,
 ]);
-const cardAnm = "gfx/VisibleCard.anm2";
 let pendingReplacementCards: EntityPickup[] = [];
 
 function onPostPeffectUpdateOrdered(): void {
@@ -38,18 +53,11 @@ function onPostPeffectUpdateOrdered(): void {
     if (isVisible) {
       const sprite = card.GetSprite();
       const spritesheet = `gfx/ui/Card_${card.SubType.toString().padStart(2, "0")}.png`;
-      const appear = sprite.IsPlaying("Appear");
 
-      sprite.Load(cardAnm, false);
       sprite.ReplaceSpritesheet(0, spritesheet);
       sprite.ReplaceSpritesheet(1, spritesheet);
       sprite.LoadGraphics();
-      if (appear) {
-        sprite.Play("Appear", true);
-      } else {
-        sprite.Play("Idle", true);
-      }
-      sprite.Update();
+      Isaac.DebugString("updating graphics")
     }
   }
   pendingReplacementCards = [];
@@ -60,12 +68,16 @@ function onPostPickupInit(pickup: EntityPickup): void {
     pickup.Variant === PickupVariant.CARD &&
     CardType[pickup.SubType] !== null &&
     shouldReplaceCard.has(pickup.SubType)
-) {
-  const spawnerEntity = pickup.SpawnerEntity
-  pendingReplacementCards.push(pickup)
+  ) {
+    const spawnerEntity = pickup.SpawnerEntity;
+    pendingReplacementCards.push(pickup);
 
-  if (spawnerEntity && spawnerEntity.Type === EntityType.PLAYER) {
-    data.level.collectedCards.add(pickup.InitSeed)
+    if (spawnerEntity && spawnerEntity.Type === EntityType.PLAYER) {
+      data.level.collectedCards.add(pickup.InitSeed);
+    }
   }
 }
+
+function getOrSetSprite() {
+  
 }
