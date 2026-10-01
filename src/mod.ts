@@ -1,6 +1,5 @@
 import { initModFeatures, ISCFeature, ModCallbackCustom, upgradeMod } from "isaacscript-common";
 import { CardType, EntityType, ModCallback, PickupVariant } from "isaac-typescript-definitions";
-import { ModCallbackRepentogon } from "isaac-typescript-definitions-repentogon";
 
 const name = "Visible Cards Redux (Repentogon)";
 
@@ -16,21 +15,6 @@ export function main(): void {
 
   initModFeatures(mod, ModFeatures);
 }
-//
-// function test(card: EntityPickup)
-// {
-//   let animationName = ""
-//   const sprite = card.GetSprite()
-//   const animation = sprite.GetAnimation()
-//   const name = sprite.GetFilename()
-//   if (animation !== animationName) {
-//     animationName = animation;
-//     Isaac.DebugString(animation)
-//     Isaac.DebugString(name)
-//   }
-//
-//   return undefined
-// }
 
 const data = {
   level: {
@@ -41,7 +25,7 @@ const data = {
 const shouldReplaceCard = new Set([
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
   22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 42, 44, 46, 48, 52, 53, 54, 56, 57,
-  58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76,
+  58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77,
   79,
 ]);
 let pendingReplacementCards: EntityPickup[] = [];
@@ -76,8 +60,4 @@ function onPostPickupInit(pickup: EntityPickup): void {
       data.level.collectedCards.add(pickup.InitSeed);
     }
   }
-}
-
-function getOrSetSprite() {
-  
 }
