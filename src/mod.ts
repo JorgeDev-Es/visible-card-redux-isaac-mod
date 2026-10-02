@@ -1,5 +1,6 @@
 import { initModFeatures, ISCFeature, ModCallbackCustom, upgradeMod } from "isaacscript-common";
 import { CardType, EntityType, ModCallback, PickupVariant } from "isaac-typescript-definitions";
+import {  } from "isaac-typescript-definitions-repentogon";
 
 const name = "Visible Cards Redux (Repentogon)";
 
@@ -37,11 +38,8 @@ function onPostPeffectUpdateOrdered(): void {
     if (isVisible) {
       const sprite = card.GetSprite();
       const spritesheet = `gfx/ui/Card_${card.SubType.toString().padStart(2, "0")}.png`;
-
-      sprite.ReplaceSpritesheet(0, spritesheet);
-      sprite.ReplaceSpritesheet(1, spritesheet);
-      sprite.LoadGraphics();
-      Isaac.DebugString("updating graphics")
+      // @ts-expect-error
+      sprite.ReplaceSpritesheet(0, spritesheet, true);
     }
   }
   pendingReplacementCards = [];
